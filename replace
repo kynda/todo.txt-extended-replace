@@ -1,0 +1,14 @@
+#!/bin/bash
+
+action=$1
+shift
+
+[ "$action" = "usage" ] && {
+    echo "replace ITEM# item"
+    echo " -c replace only the context"
+    echo " -p replace only the project"
+    echo " -m replace only the message"
+    exit
+}
+
+python2.7 ${TODO_ACTIONS_DIR}/replace.py "$TODO_FILE" "$@"
