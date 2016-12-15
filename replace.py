@@ -10,8 +10,10 @@ def writeTodo(lines, todo_file):
         f.write("%s" % line)
     f.close()
 
-def composeItem(priority, projects, contexts, message):
+def composeItem(priority, deadlines, projects, contexts, message):
     item = priority.strip() + ' ' + message.strip() + ' '
+    for deadline in deadlines:
+        item = item + deadline.strip() + ' '
     for project in projects:
         item = item + project.strip() + ' '
     for context in contexts:
@@ -28,6 +30,7 @@ TODO.TXT Extended Replace
     parser.add_argument('-c', '--context', help="Replace context")
     parser.add_argument('-p', '--project', help="Replace project")
     parser.add_argument('-m', '--message', help="Replace message")
+    parser.add_argument('-d', '--due', help="Replace due date")
     parser.add_argument('todo_file')
     parser.add_argument('item_number', type=int)
     parser.add_argument('text', nargs='?')
@@ -60,16 +63,24 @@ TODO.TXT Extended Replace
     if context_match:
         contexts = context_match.groups()
 
+    deadlines = ()
+    deadline_match = re.search('(due:[\w\-:]+)', item)
+    if deadline_match:
+        deadlines = deadline_match.groups()
+
     message = item
     message = message.replace(priority, '')
     for project in projects:
         message = message.replace(project, '')
     for context in contexts:
         message = message.replace(context, '')
+    for deadline in deadlines:
+        message = message.replace(deadline, '')
     message = message.strip()
 
-    if not (args.context or args.project or args.message):
+    if not (args.context or args.project or args.message or args.due):
         lines[real_item_number] = priority + ' ' + args.text + "\n"
+        print lines[real_item_number],
         writeTodo(lines, args.todo_file)
         return
 
@@ -79,15 +90,20 @@ TODO.TXT Extended Replace
     if args.project:
         projects = (args.project,)
 
+    if args.due:
+        deadlines = (args.due,)
+
     if args.message:
         message = args.message
 
     lines[real_item_number] = composeItem(
         priority,
+        deadlines,
         projects,
         contexts,
         message
     )
+    print lines[real_item_number],
     writeTodo(lines, args.todo_file)
     return
 
