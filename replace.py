@@ -96,6 +96,7 @@ TODO.TXT Extended Replace
     if args.message:
         message = args.message
 
+    print "Old: " + lines[real_item_number],
     lines[real_item_number] = composeItem(
         priority,
         deadlines,
@@ -103,7 +104,7 @@ TODO.TXT Extended Replace
         contexts,
         message
     )
-    print lines[real_item_number],
+    print "New: " + lines[real_item_number],
     writeTodo(lines, args.todo_file)
     return
 
