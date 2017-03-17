@@ -1,0 +1,15 @@
+#!/bin/bash
+
+action=$1
+shift
+
+[ "$action" = "usage" ] && {
+    echo "rm ITEM#[, ITEM#, ITEM#, ...]"
+    echo "  For each ITEM#, calls command rm. "
+    echo ""
+    exit
+}
+
+for i in $(seq 1 $#); do
+    $TODO_SH -f command rm ${!i};
+done
