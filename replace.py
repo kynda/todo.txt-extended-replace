@@ -12,12 +12,12 @@ def writeTodo(lines, todo_file):
 
 def composeItem(priority, deadlines, projects, contexts, message):
     item = priority.strip() + ' ' + message.strip() + ' '
-    for deadline in deadlines:
-        item = item + deadline.strip() + ' '
     for project in projects:
         item = item + project.strip() + ' '
     for context in contexts:
         item = item + context.strip() + ' '
+    for deadline in deadlines:
+        item = item + deadline.strip() + ' '
 
     return item.strip() + "\n"
 
