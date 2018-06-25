@@ -3,12 +3,28 @@
 action=$1
 shift
 
-[ "$action" = "usage" ] && {
-    echo "replace ITEM# item"
-    echo " -c replace only the context"
-    echo " -p replace only the project"
-    echo " -m replace only the message"
+options=$@
+
+function usage() {
+    echo "  $(basename $0) ITEM# [OPTION][TERM]"
+        echo "    Replace all or part of an item"
+    echo ""
+    echo "    Options"
+    echo "      -c replace only the context"
+    echo "      -p replace only the project"
+    echo "      -m replace only the message"
+    echo "    Examples"
+    echo "      \$ todo.sh $(basename $0) 1 \"task +project @context\""
+    echo "      \$ todo.sh $(basename $0) 1 -c \"\@newcontext\""
+    echo "      \$ todo.sh $(basename $0) 1 -p \"+newproject\""
+    echo "      \$ todo.sh $(basename $0) 1 -m \"new task\""
+    echo ""
     exit
 }
 
-python2.7 ${TODO_ACTIONS_DIR}/replace.py "$TODO_FILE" "$@"
+function replace() {
+    python2.7 ${TODO_ACTIONS_DIR}/replace/replace.py "$TODO_FILE" $options
+}
+
+[ "$action" = "usage" ] && usage
+[ "$action" = "replace" ] && replace

@@ -109,4 +109,8 @@ TODO.TXT Extended Replace
     return
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print "Usage: replace.py [-h] [-c CONTEXT] [-p PROJECT] [-m MESSAGE] [-d DUE] todo_File item_number [text]"
+        sys.exit(1)
+
     main(sys.argv[1:])

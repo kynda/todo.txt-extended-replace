@@ -3,6 +3,8 @@
 action=$1
 shift
 
+function usage()
+
 [ "$action" = "usage" ] && {
     echo "pri ITEM#[, ITEM#, ITEM#, ...] PRIORITY"
     echo "  For each ITEM#, calls command pri with priority PRIORITY."
