@@ -3,6 +3,12 @@
 action=$1
 shift
 
+item=$1
+shift
+
+flag=$1
+shift
+
 options=$@
 
 function usage() {
@@ -23,7 +29,7 @@ function usage() {
 }
 
 function replace() {
-    python2.7 ${TODO_ACTIONS_DIR}/replace/replace.py "$TODO_FILE" $options
+    python2.7 ${TODO_ACTIONS_DIR}/replace/replace.py $TODO_FILE $item $flag "$options"
 }
 
 [ "$action" = "usage" ] && usage
