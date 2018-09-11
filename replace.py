@@ -10,7 +10,7 @@ def writeTodo(lines, todo_file):
         f.write("%s" % line)
     f.close()
 
-def composeItem(priority, deadlines, projects, contexts, message):
+def composeItem(priority, deadlines, tags, projects, contexts, message):
     item = priority.strip() + ' ' + message.strip() + ' '
     for project in projects:
         item = item + project.strip() + ' '
@@ -18,6 +18,8 @@ def composeItem(priority, deadlines, projects, contexts, message):
         item = item + context.strip() + ' '
     for deadline in deadlines:
         item = item + deadline.strip() + ' '
+    for tag in tags:
+        item = item + tag.strip() + ' '
 
     return item.strip() + "\n"
 
@@ -31,6 +33,7 @@ TODO.TXT Extended Replace
     parser.add_argument('-p', '--project', help="Replace project")
     parser.add_argument('-m', '--message', help="Replace message")
     parser.add_argument('-d', '--due', help="Replace due date")
+    parser.add_argument('-t', '--tags', help="Replace tags")
     parser.add_argument('todo_file')
     parser.add_argument('item_number', type=int)
     parser.add_argument('text', nargs='?')
@@ -68,6 +71,11 @@ TODO.TXT Extended Replace
     if deadline_match:
         deadlines = deadline_match.groups()
 
+    tags = ()
+    tags_match = re.search('([\w]+:[\w]+)', item)
+    if tags_match:
+        tags = tags_match.groups()
+
     message = item
     message = message.replace(priority, '')
     for project in projects:
@@ -76,9 +84,11 @@ TODO.TXT Extended Replace
         message = message.replace(context, '')
     for deadline in deadlines:
         message = message.replace(deadline, '')
+    for tag in tags:
+        message = message.replace(tag, '')
     message = message.strip()
 
-    if not (args.context or args.project or args.message or args.due):
+    if not (args.context or args.project or args.message or args.due or args.tags):
         lines[real_item_number] = priority + ' ' + args.text + "\n"
         print lines[real_item_number],
         writeTodo(lines, args.todo_file)
@@ -93,6 +103,9 @@ TODO.TXT Extended Replace
     if args.due:
         deadlines = (args.due,)
 
+    if args.tags:
+        tags = (args.tags,)
+
     if args.message:
         message = args.message
 
@@ -100,6 +113,7 @@ TODO.TXT Extended Replace
     lines[real_item_number] = composeItem(
         priority,
         deadlines,
+        tags,
         projects,
         contexts,
         message
